@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWR Contract Addendum Acknowledgement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 24px;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: orange;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="message-box">
+    <h1 id="main-message">Processing...</h1>
+    <p id="sub-message">Please wait while we record your acknowledgement.</p>
+  </div>
+
+  <script>
+    // Zapier Webhook URL (no trailing slash)
+    const zapierWebhook = "https://hooks.zapier.com/hooks/catch/6345312/u5lxj5j";
+
+    // Get email parameter from URL
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+
+    const mainMessage = document.getElementById("main-message");
+    const subMessage = document.getElementById("sub-message");
+
+    if (!email) {
+      mainMessage.textContent = "⚠ Invalid link";
+      mainMessage.classList.add("error");
+      subMessage.textContent = "We could not record your acknowledgement because the link is missing the email parameter.";
+    } else {
+      mainMessage.textContent = "✅ Thank you for your acknowledgement!";
+      mainMessage.classList.add("success");
+      subMessage.textContent = `We’ll send the Contract Addendum to your email (${email}) for signing. Redirecting...`;
+
+      // Create a hidden form to send data to Zapier
+      const form = document.createElement("form");
+      form.action = zapierWebhook;
+      form.method = "POST";
+
+      const emailField = document.createElement("input");
+      emailField.type = "hidden";
+      emailField.name = "email";
+      emailField.value = email;
+
+      form.appendChild(emailField);
+      document.body.appendChild(form);
+      form.submit();
+
+      // Redirect to thank-you page
+      setTimeout(() => {
+        window.location.href = `thankyou.html?email=${encodeURIComponent(email)}`;
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
