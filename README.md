@@ -8,7 +8,7 @@ This repository contains two simple HTML pages used for recording contractor ack
 
 ## ⚙️ How It Works
 1. The email link (sent via Monday.com) should look like:
-    https://yourusername.github.io/wwr-acknowledgement/acknowledgement.html?email={{Email}}
+    https://kapitankidlat11.github.io/wwr-acknowledgement/acknowledgement.html?email={{Email}}
 2. The page automatically:
 - Shows a thank-you message
 - Sends the `email` to your Zapier webhook
@@ -22,8 +22,7 @@ This repository contains two simple HTML pages used for recording contractor ack
 3. Save and wait for your site to publish.
 
 Your live site will appear at: 
-    https://yourusername.github.io/wwr-acknowledgement/
+    https://kapitankidlat11.github.io/wwr-acknowledgement/
 
 You can now use links like:
-
-    https://yourusername.github.io/wwr-acknowledgement/acknowledgement.html?email=test@example.com
+    https://kapitankidlat11.github.io/wwr-acknowledgement/acknowledgement.html?email=test@example.com
