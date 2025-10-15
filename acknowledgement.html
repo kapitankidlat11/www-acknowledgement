@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WWR Contract Addendum Acknowledgement</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WWR Contract Acknowledgement</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,12 +17,12 @@
       max-width: 400px;
       margin: auto;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     h1 {
       font-size: 24px;
     }
-    .success {
+    .yes {
       color: green;
     }
     .error {
@@ -33,14 +33,14 @@
 <body>
   <div class="container" id="message-box">
     <h1 id="main-message">Processing...</h1>
-    <p id="sub-message">Please wait while we record your acknowledgement.</p>
+    <p id="sub-message">Please wait while we record your response.</p>
   </div>
 
   <script>
-    // Zapier Webhook URL (no trailing slash)
+    // ✅ Your Zapier Webhook URL
     const zapierWebhook = "https://hooks.zapier.com/hooks/catch/6345312/u5lxj5j";
 
-    // Get email parameter from URL
+    // ✅ Extract query parameters
     const params = new URLSearchParams(window.location.search);
     const email = params.get("email");
 
@@ -50,30 +50,31 @@
     if (!email) {
       mainMessage.textContent = "⚠ Invalid link";
       mainMessage.classList.add("error");
-      subMessage.textContent = "We could not record your acknowledgement because the link is missing the email parameter.";
+      subMessage.textContent = "Missing email parameter.";
     } else {
       mainMessage.textContent = "✅ Thank you for your acknowledgement!";
-      mainMessage.classList.add("success");
-      subMessage.textContent = `We’ll send the Contract Addendum to your email (${email}) for signing. Redirecting...`;
+      mainMessage.classList.add("yes");
+      subMessage.textContent = `Recording acknowledgement for ${email}...`;
 
-      // Create a hidden form to send data to Zapier
-      const form = document.createElement("form");
-      form.action = zapierWebhook;
-      form.method = "POST";
-
-      const emailField = document.createElement("input");
-      emailField.type = "hidden";
-      emailField.name = "email";
-      emailField.value = email;
-
-      form.appendChild(emailField);
-      document.body.appendChild(form);
-      form.submit();
-
-      // Redirect to thank-you page
-      setTimeout(() => {
-        window.location.href = `thankyou.html?email=${encodeURIComponent(email)}`;
-      }, 3000);
+      // ✅ Send data as JSON (CORS-friendly)
+      fetch(zapierWebhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      })
+        .then(async (response) => {
+          console.log("Webhook sent:", response.status);
+          if (response.ok) {
+            // ✅ Redirect after Zapier confirms receipt
+            window.location.href = `thankyou.html?email=${encodeURIComponent(email)}`;
+          } else {
+            subMessage.textContent = "Error sending acknowledgement. Please retry.";
+          }
+        })
+        .catch((error) => {
+          console.error("Error sending to Zapier:", error);
+          subMessage.textContent = "⚠ Unable to reach the server.";
+        });
     }
   </script>
 </body>
